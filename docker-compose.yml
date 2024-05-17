@@ -11,7 +11,7 @@ services:
     depends_on:
       - database
     ports:
-      - "80:80"
+      - "89:80"
     volumes:
       - ./log:/var/log/apache2
       - ./app:/var/www/html
