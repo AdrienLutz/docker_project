@@ -33,11 +33,7 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_DATABASE: sf_db
       MYSQL_ROOT_PASSWORD: password
-#      MARIADB_USER: root
-#      MARIADB_PASSWORD: password
-#      MARIADB_DATABASE: sf_db
-#      MARIADB_ROOT_PASSWORD: password
-#      MARIADB_ROOT_PASSWORD:
+
     networks:
       - sf_network
 
