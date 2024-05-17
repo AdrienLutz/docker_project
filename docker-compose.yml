@@ -1,0 +1,82 @@
+version : '3'
+
+# les réseaux nécessaires à faire dialoguer les services entre eux
+networks:
+  sf_network:
+    # pilote permettant de connecter, de faire un pont, entre les services concernés
+    driver: bridge
+
+services:
+
+  sf:
+    build: .
+    container_name: project_app
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+    volumes:
+      - ./log:/var/log/apache2
+      - ./app:/var/www/html
+      - ./vhosts:/etc/apache2/sites-enabled
+    networks:
+      - sf_network
+
+
+  db:
+    image: mariadb
+    container_name: project_db
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: sf_db
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - sf_network
+
+
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    expose:
+      - "3307"
+    ports:
+      - "3307:80"
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_PORT=3306
+    networks:
+      - sf_network
+
+
+#  www:
+#    build: docker
+#    container_name: www
+#    ports:
+#      - "8000:80"
+#    volumes:
+#      - ./docker/vhosts:/etc/apache2/sites-enabled
+#      - ./:/var/www
+#    networks:
+#      - sf_network
+
+  mail:
+    image: maildev/maildev
+    container_name: Maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    environment:
+      MAILDEV_SMTP_PORT: 1025
+      MAILDEV_WEB_PORT: 1080
+    networks:
+      - sf_network
