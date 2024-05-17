@@ -24,6 +24,9 @@
 
 FROM php:7.4-apache
 
+#tentative de regler le bug d'accès au dossier mysql qui se crée à chaque docker-compose up -d
+RUN #chmod 777 ./mysql
+
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -33,6 +36,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install pdo pdo_mysql
 RUN a2enmod rewrite
+
 
 WORKDIR /var/www/html
 COPY . .
